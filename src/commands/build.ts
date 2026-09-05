@@ -2,7 +2,7 @@ import type { Config } from "../config.js";
 import { loadConfig } from "../config.js";
 import type { Task, TaskGraph } from "../tasks.js";
 import { loadTasks, saveTasks } from "../tasks.js";
-import { route } from "../router.js";
+import { resolveRoute } from "../router.js";
 import { makeProvider, profileForRoute } from "../providers/index.js";
 import { logEvent, readLedger, recordCost, spendForTask, totalSpend } from "../ledger.js";
 import { cloudGate } from "../gate.js";
@@ -63,7 +63,7 @@ export async function buildCommand(opts: BuildOpts = {}): Promise<void> {
 async function buildOne(graph: TaskGraph, task: Task, config: Config, opts: BuildOpts): Promise<void> {
   const events = await readLedger();
   const spent = totalSpend(events);
-  const decision = route(task, config, spent);
+  const decision = resolveRoute(task, config, spent);
   const profile = profileForRoute(decision.route, config);
   const model = profile.model ?? "(default)";
 

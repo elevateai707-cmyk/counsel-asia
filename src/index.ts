@@ -7,6 +7,7 @@ import { statusCommand } from "./commands/status.js";
 import { escalateCommand } from "./commands/escalate.js";
 import { diagnoseCommand } from "./commands/diagnose.js";
 import { modelCommand } from "./commands/model.js";
+import { webCommand } from "./commands/web.js";
 import { loadAsiaEnv } from "./env.js";
 
 loadAsiaEnv();
@@ -62,6 +63,13 @@ program
   .argument("<taskId>", "id of the task to repair")
   .option("--apply", "test-gate the corrected patch and apply it on green", false)
   .action((taskId, opts) => diagnoseCommand(taskId, { apply: opts.apply }));
+
+program
+  .command("web")
+  .description("Launch the local mobile-first web control panel (localhost only, no auth)")
+  .option("--port <port>", "port to listen on (default 4319)")
+  .option("--cwd <path>", "project directory the panel operates on (default: cwd)")
+  .action(webCommand);
 
 program.parseAsync(process.argv).catch((err) => {
   console.error(`\n✗ ${err instanceof Error ? err.message : String(err)}`);

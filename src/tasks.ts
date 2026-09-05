@@ -22,6 +22,10 @@ export const Task = z.object({
   dependsOn: z.array(z.string()).default([]),
   attempts: z.number().int().nonnegative().default(0),
   status: z.enum(["pending", "in_progress", "blocked", "done"]).default("pending"),
+  // Optional Hermes-assigned route. Absent on old task files and on the
+  // deterministic-fallback path — the deterministic router then decides.
+  route: z.enum(["orchestrator", "coder", "coder-cheap"]).optional(),
+  routeReason: z.string().optional(),
 });
 export type Task = z.infer<typeof Task>;
 

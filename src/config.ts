@@ -8,7 +8,7 @@ import { paths } from "./paths.js";
  * entirely.
  */
 export const ModelProfile = z.object({
-  provider: z.enum(["kimi", "deepseek", "qwen", "ollama", "disabled"]),
+  provider: z.enum(["kimi", "deepseek", "qwen", "ollama", "openrouter", "disabled"]),
   model: z.string().optional(),
   reason: z.string().optional(),
 });
@@ -33,6 +33,9 @@ export const Config = z.object({
   // --- model profiles by role ---
   models: z
     .object({
+      // The Hermes routing agent: decomposes the prompt and picks a route per
+      // task. NOT free — every plan call costs tokens on this provider.
+      router: ModelProfile.default({ provider: "openrouter", model: "nousresearch/hermes-4-70b" }),
       orchestrator: ModelProfile.default({ provider: "kimi", model: "kimi-k3" }),
       coder: ModelProfile.default({ provider: "deepseek", model: "deepseek-chat" }),
       coder_cheap: ModelProfile.default({ provider: "qwen", model: "qwen3-coder-flash" }),
@@ -46,6 +49,7 @@ export const Config = z.object({
   moonshot_url: z.string().default("https://api.moonshot.ai/v1"),
   deepseek_url: z.string().default("https://api.deepseek.com"),
   qwen_url: z.string().default("https://dashscope-intl.aliyuncs.com/compatible-mode/v1"),
+  openrouter_url: z.string().default("https://openrouter.ai/api/v1"),
   ollama_url: z.string().default("http://localhost:11434"),
 });
 export type Config = z.infer<typeof Config>;

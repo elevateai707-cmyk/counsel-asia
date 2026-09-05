@@ -1,7 +1,7 @@
 import { loadConfig } from "../config.js";
 import { loadTasks, saveTasks } from "../tasks.js";
 import { readLedger, logEvent, recordCost, spendForTask, totalSpend } from "../ledger.js";
-import { route } from "../router.js";
+import { resolveRoute } from "../router.js";
 import { makeProvider, profileForRoute } from "../providers/index.js";
 import { cloudGate } from "../gate.js";
 import { estimateCostUsd, knownModel, roughTokenEstimate } from "../pricing.js";
@@ -40,7 +40,7 @@ export async function diagnoseCommand(taskId: string, opts: { apply?: boolean } 
     return;
   }
 
-  const decision = route(task, config, totalSpend(ledger));
+  const decision = resolveRoute(task, config, totalSpend(ledger));
   const profile = profileForRoute(decision.route, config);
   const model = profile.model ?? "(default)";
   const provider = makeProvider(profile, config);

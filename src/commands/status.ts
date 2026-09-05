@@ -15,6 +15,7 @@ export async function statusCommand(): Promise<void> {
   console.log(`counsel-asia status`);
   console.log(`───────────────────`);
   console.log(`models:`);
+  role("router", config.models.router);
   role("orchestrator", config.models.orchestrator);
   role("coder", config.models.coder);
   role("coder-cheap", config.models.coder_cheap);
@@ -47,6 +48,7 @@ export async function statusCommand(): Promise<void> {
   console.log(`tasks: ${graph.tasks.length}  (${Object.entries(byStatus).map(([k, v]) => `${v} ${k}`).join(", ")})`);
   for (const t of graph.tasks) {
     const mark = t.status === "done" ? "✓" : t.status === "blocked" ? "✗" : "·";
-    console.log(`  ${mark} ${t.id}  [${t.kind}/${t.risk}]  ${t.title}  (attempts: ${t.attempts})`);
+    const r = t.route ? `  → ${t.route}` : "";
+    console.log(`  ${mark} ${t.id}  [${t.kind}/${t.risk}]  ${t.title}  (attempts: ${t.attempts})${r}`);
   }
 }

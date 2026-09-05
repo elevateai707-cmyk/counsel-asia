@@ -7,15 +7,17 @@
     "counsel-asia": "dist/index.js"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && rm -rf dist/web/public && cp -r src/web/public dist/web/public",
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "tsx --test test/*.test.ts"
   },
   "dependencies": {
+    "@fastify/static": "^9.1.3",
     "commander": "^12.1.0",
     "execa": "^9.5.1",
+    "fastify": "^5.8.5",
     "simple-git": "^3.27.0",
     "zod": "^3.23.8"
   },

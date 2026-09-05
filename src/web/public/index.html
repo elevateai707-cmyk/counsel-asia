@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>counsel-asia</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header>
+  <h1>counsel-asia</h1>
+  <div id="spend-chip" class="chip">$0.0000</div>
+</header>
+
+<nav id="tabs">
+  <button data-tab="prompt" class="active">Prompt</button>
+  <button data-tab="progress">Progress</button>
+  <button data-tab="models">Models</button>
+</nav>
+
+<main>
+  <!-- Prompt -->
+  <section id="tab-prompt" class="tab active">
+    <textarea id="idea" rows="6" placeholder="Describe what you want built… Hermes will decompose it and pick the cheapest model per task."></textarea>
+    <button id="run" class="primary">Run (plan + build)</button>
+    <div id="prompt-msg" class="msg"></div>
+    <h2>Task graph</h2>
+    <ul id="prompt-tasks" class="tasks"></ul>
+  </section>
+
+  <!-- Progress -->
+  <section id="tab-progress" class="tab">
+    <div class="budget">
+      <div class="budget-bar"><div id="budget-fill"></div></div>
+      <div id="budget-label" class="dim"></div>
+    </div>
+    <div id="run-state" class="msg"></div>
+    <ul id="progress-tasks" class="tasks"></ul>
+    <h2>Ledger</h2>
+    <ul id="events" class="events"></ul>
+  </section>
+
+  <!-- Models -->
+  <section id="tab-models" class="tab">
+    <p class="dim">Default mode is <strong>Auto (Hermes)</strong>: Hermes picks the tier per task. Overrides below pin a role to a provider.</p>
+    <div id="model-rows"></div>
+    <h2>Provider keys</h2>
+    <ul id="keys" class="keys"></ul>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

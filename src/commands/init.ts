@@ -23,11 +23,12 @@ export async function initCommand(idea?: string): Promise<void> {
   await writeFile(p.goal, idea ? `# Goal\n\n${idea}\n` : `# Goal\n\n_Describe what you want built._\n`, "utf8");
 
   console.log(`✓ Initialized counsel-asia workspace at ${p.root}`);
+  console.log(`  router:        openrouter:nousresearch/hermes-4-70b  (Hermes autoroute)`);
   console.log(`  orchestrator:  kimi:kimi-k3        (plans + reviews)`);
   console.log(`  coder:         deepseek:deepseek-chat`);
   console.log(`  coder-cheap:   qwen:qwen3-coder-flash`);
   console.log(`  budget:        $0.50/project, $0.10/task, 50 calls/project, 5 calls/task`);
-  console.log(`\nAPI keys: export MOONSHOT_API_KEY / DEEPSEEK_API_KEY / DASHSCOPE_API_KEY,`);
+  console.log(`\nAPI keys: export OPENROUTER_API_KEY / MOONSHOT_API_KEY / DEEPSEEK_API_KEY / DASHSCOPE_API_KEY,`);
   console.log(`or add them to ${counselAsiaHome()}/.env`);
   console.log(`\nNext: counsel-asia plan "<your idea>"`);
 }

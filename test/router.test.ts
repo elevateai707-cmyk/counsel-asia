@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { route } from "../src/router.ts";
+import { route, resolveRoute } from "../src/router.ts";
 import { defaultConfig } from "../src/config.ts";
 import { Task } from "../src/tasks.ts";
 
@@ -94,4 +94,41 @@ test("spend below the 90% threshold does NOT downgrade", () => {
 
 test("default spentUsd is 0 — no downgrade", () => {
   assert.equal(route(task({ risk: "security" }), defaultConfig()).route, "orchestrator");
+});
+
+// --- Hermes-assigned routes (resolveRoute) ---
+
+test("resolveRoute respects a Hermes-assigned route", () => {
+  // deterministic would say coder-cheap for docs; Hermes said orchestrator
+  const t = task({ kind: "docs", route: "orchestrator", routeReason: "needs care" });
+  const d = resolveRoute(t, defaultConfig());
+  assert.equal(d.route, "orchestrator");
+  assert.match(d.reason, /Hermes route: orchestrator/);
+  assert.match(d.reason, /needs care/);
+});
+
+test("resolveRoute falls back to the deterministic policy without a Hermes route", () => {
+  const d = resolveRoute(task({ kind: "docs" }), defaultConfig());
+  assert.equal(d.route, "coder-cheap");
+  assert.match(d.reason, /kind=docs/);
+});
+
+test("budget pressure overrides Hermes's choice near the cap", () => {
+  const cfg = { ...defaultConfig(), max_usd_per_project: 0.5 };
+  const t = task({ kind: "docs", route: "orchestrator", routeReason: "needs care" });
+  const d = resolveRoute(t, cfg, 0.46);
+  assert.equal(d.route, "coder");
+  assert.match(d.reason, /downgraded to coder/);
+});
+
+test("budget pressure downgrades a Hermes coder choice to coder-cheap", () => {
+  const cfg = { ...defaultConfig(), max_usd_per_project: 0.5 };
+  const t = task({ kind: "logic", route: "coder" });
+  assert.equal(resolveRoute(t, cfg, 0.5).route, "coder-cheap");
+});
+
+test("Hermes route untouched when spend is comfortably under the cap", () => {
+  const cfg = { ...defaultConfig(), max_usd_per_project: 0.5 };
+  const t = task({ kind: "docs", route: "orchestrator" });
+  assert.equal(resolveRoute(t, cfg, 0.1).route, "orchestrator");
 });

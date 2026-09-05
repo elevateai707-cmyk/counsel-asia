@@ -1,12 +1,12 @@
 import { loadConfig, saveConfig, type Config, type ModelProfile } from "../config.js";
 import { counselAsiaHome } from "../paths.js";
 
-/** The four model roles this fork routes between. */
-const ROLES = ["orchestrator", "coder", "coder_cheap", "fallback"] as const;
+/** The model roles this fork routes between. */
+const ROLES = ["router", "orchestrator", "coder", "coder_cheap", "fallback"] as const;
 type Role = (typeof ROLES)[number];
 
 /** Providers a role can point at. */
-const PROVIDERS = ["kimi", "deepseek", "qwen", "ollama", "disabled"] as const;
+const PROVIDERS = ["kimi", "deepseek", "qwen", "ollama", "openrouter", "disabled"] as const;
 type ProviderName = (typeof PROVIDERS)[number];
 
 /** Sensible default model per provider when the user doesn't name one. */
@@ -15,6 +15,7 @@ const DEFAULT_MODEL: Record<ProviderName, string | undefined> = {
   deepseek: "deepseek-chat",
   qwen: "qwen3-coder-flash",
   ollama: "gemma4:e4b",
+  openrouter: "nousresearch/hermes-4-70b",
   disabled: undefined,
 };
 
@@ -23,6 +24,7 @@ const KEY_ENV: Partial<Record<ProviderName, string>> = {
   kimi: "MOONSHOT_API_KEY",
   deepseek: "DEEPSEEK_API_KEY",
   qwen: "DASHSCOPE_API_KEY",
+  openrouter: "OPENROUTER_API_KEY",
 };
 
 function isRole(x: string): x is Role {

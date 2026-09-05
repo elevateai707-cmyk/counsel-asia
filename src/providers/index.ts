@@ -4,6 +4,7 @@ import { KimiProvider } from "./kimi.js";
 import { DeepSeekProvider } from "./deepseek.js";
 import { QwenProvider } from "./qwen.js";
 import { OllamaProvider } from "./ollama.js";
+import { OpenRouterProvider } from "./openrouter.js";
 import type { Provider } from "./types.js";
 
 export * from "./types.js";
@@ -19,6 +20,8 @@ export function makeProvider(profile: ModelProfile, config: Config): Provider {
       return new QwenProvider(profile.model ?? "qwen3-coder-flash", config.qwen_url);
     case "ollama":
       return new OllamaProvider(profile.model ?? "gemma4:e4b", config.ollama_url);
+    case "openrouter":
+      return new OpenRouterProvider(profile.model ?? "nousresearch/hermes-4-70b", config.openrouter_url);
     case "disabled":
       throw new Error(`Model role is disabled${profile.reason ? ` (${profile.reason})` : ""}.`);
   }
